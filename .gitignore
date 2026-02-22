@@ -1,0 +1,4 @@
+.env
+node_modules/
+gateway/node_modules/
+gateway/claude-settings.json
