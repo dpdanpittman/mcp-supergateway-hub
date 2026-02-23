@@ -1,0 +1,16 @@
+{
+  "name": "mcp-server-ollama-assistant",
+  "version": "1.0.0",
+  "description": "MCP server that delegates tasks to a local Ollama LLM — acts as a junior dev assistant for summarization, code drafting, and text analysis",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "mcp-server-ollama-assistant": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  }
+}

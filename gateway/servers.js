@@ -5,6 +5,11 @@
 // env values reference process.env keys from .env
 // =============================================================================
 
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 export function getServers() {
   const e = process.env;
 
@@ -74,6 +79,7 @@ export function getServers() {
     { name: 'mindsdb', command: 'uvx', args: ['mindsdb-mcp-server'] },
 
     // TIER 11: AI Model Bridges
+    { name: 'ollama-assistant', command: 'node', args: [resolve(__dirname, '..', 'servers', 'ollama-assistant', 'index.js')], env: { OLLAMA_HOST: e.OLLAMA_HOST, OLLAMA_MODEL: e.OLLAMA_MODEL } },
     { name: 'ollama-bridge', command: 'npx', args: ['-y', 'mcp-server-ollama-bridge'], env: { OLLAMA_HOST: e.OLLAMA_HOST } },
     { name: 'openai-bridge', command: 'npx', args: ['-y', 'mcp-server-openai-bridge'], env: { OPENAI_API_KEY: e.OPENAI_API_KEY } },
     { name: 'gemini-bridge', command: 'npx', args: ['-y', 'mcp-server-gemini-bridge'], env: { GOOGLE_API_KEY: e.GOOGLE_API_KEY } },

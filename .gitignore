@@ -2,3 +2,4 @@
 node_modules/
 gateway/node_modules/
 gateway/claude-settings.json
+servers/*/node_modules/
