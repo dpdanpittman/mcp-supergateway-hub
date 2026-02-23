@@ -82,8 +82,8 @@ async function launchServer(server, port) {
   const stdioCmdParts = [server.command, ...server.args];
   const stdioCmd = stdioCmdParts.join(' ');
 
+  const sgBin = resolve(__dirname, 'node_modules', '.bin', 'supergateway');
   const sgArgs = [
-    '-y', 'supergateway',
     '--stdio', stdioCmd,
     '--outputTransport', 'streamableHttp',
     '--port', String(port),
@@ -103,7 +103,7 @@ async function launchServer(server, port) {
   }
 
   return new Promise((resolve) => {
-    const child = spawn('npx', sgArgs, {
+    const child = spawn(sgBin, sgArgs, {
       env: childEnv,
       stdio: ['ignore', 'pipe', 'pipe'],
       detached: false,
@@ -133,12 +133,16 @@ async function launchServer(server, port) {
         started = true;
         clearTimeout(timeout);
         if (code !== 0) {
-          failed.push({ name: server.name, error: `exit code ${code}` });
+          const errMsg = stderrBuf.trim() ? `exit code ${code}: ${stderrBuf.trim().split('\n').slice(-3).join(' | ')}` : `exit code ${code}`;
+          failed.push({ name: server.name, error: errMsg });
           resolve(false);
         }
       } else {
         // Server died after starting
         console.error(`[DIED] ${server.name} (port ${port}) exited with code ${code}`);
+        if (stderrBuf.trim()) {
+          console.error(`[DIED] ${server.name} stderr:\n${stderrBuf.trim().split('\n').slice(-10).join('\n')}`);
+        }
       }
     });
 
