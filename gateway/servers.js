@@ -44,7 +44,7 @@ export function getServers() {
 
     // TIER 5: Communication & Collaboration
     { name: 'slack', command: 'npx', args: ['-y', '@modelcontextprotocol/server-slack'], env: { SLACK_BOT_TOKEN: e.SLACK_BOT_TOKEN, SLACK_TEAM_ID: e.SLACK_TEAM_ID } },
-    { name: 'discord', command: 'npx', args: ['-y', 'mcp-discord'], env: { DISCORD_BOT_TOKEN: e.DISCORD_BOT_TOKEN } },
+    { name: 'discord', command: 'npx', args: ['-y', 'mcp-discord'], env: { DISCORD_TOKEN: e.DISCORD_BOT_TOKEN } },
     { name: 'notion', command: 'npx', args: ['-y', 'notion-mcp-server'], env: { NOTION_API_KEY: e.NOTION_API_KEY } },
 
     // TIER 6: Creative & Design
