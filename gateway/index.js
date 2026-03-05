@@ -77,11 +77,13 @@ if (excludeIdx !== -1 && args[excludeIdx + 1]) {
 // Launch
 const running = [];
 const failed = [];
+const MAX_RESPAWN = 10;
+const RESPAWN_BASE_DELAY = 2000;
+const RESPAWN_MAX_DELAY = 60000;
+let shuttingDown = false;
 
-async function launchServer(server, port) {
-  const stdioCmdParts = [server.command, ...server.args];
-  const stdioCmd = stdioCmdParts.join(' ');
-
+function spawnChild(server, port, childEnv) {
+  const stdioCmd = [server.command, ...server.args].join(' ');
   const sgBin = resolve(__dirname, 'node_modules', '.bin', 'supergateway');
   const sgArgs = [
     '--stdio', stdioCmd,
@@ -92,7 +94,21 @@ async function launchServer(server, port) {
     '--healthEndpoint', '/health',
   ];
 
-  // Build environment: inherit process.env + server-specific env
+  const child = spawn(sgBin, sgArgs, {
+    env: childEnv,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    detached: false,
+  });
+
+  let stderrBuf = '';
+  child.stderr.on('data', (data) => {
+    stderrBuf += data.toString();
+  });
+
+  return { child, getStderr: () => stderrBuf };
+}
+
+async function launchServer(server, port) {
   const childEnv = { ...process.env };
   if (server.env) {
     for (const [k, v] of Object.entries(server.env)) {
@@ -102,20 +118,45 @@ async function launchServer(server, port) {
     }
   }
 
-  return new Promise((resolve) => {
-    const child = spawn(sgBin, sgArgs, {
-      env: childEnv,
-      stdio: ['ignore', 'pipe', 'pipe'],
-      detached: false,
+  let respawnCount = 0;
+
+  function respawn() {
+    if (shuttingDown) return;
+    const { child, getStderr } = spawnChild(server, port, childEnv);
+
+    child.on('error', (err) => {
+      if (!shuttingDown) {
+        console.error(`[ERROR] ${server.name} (port ${port}): ${err.message}`);
+      }
     });
+
+    child.on('exit', (code) => {
+      if (shuttingDown) return;
+      if (respawnCount < MAX_RESPAWN) {
+        respawnCount++;
+        const delay = Math.min(RESPAWN_BASE_DELAY * Math.pow(2, respawnCount - 1), RESPAWN_MAX_DELAY);
+        console.error(`[DIED] ${server.name} (port ${port}) exited with code ${code}, respawning in ${Math.round(delay / 1000)}s (${respawnCount}/${MAX_RESPAWN})`);
+        const stderr = getStderr().trim();
+        if (stderr) {
+          console.error(`  ${stderr.split('\n').slice(-3).join('\n  ')}`);
+        }
+        setTimeout(respawn, delay);
+      } else {
+        console.error(`[DEAD] ${server.name} (port ${port}) exceeded ${MAX_RESPAWN} respawns, giving up`);
+      }
+    });
+  }
+
+  // Initial launch with startup detection
+  return new Promise((resolvePromise) => {
+    const { child, getStderr } = spawnChild(server, port, childEnv);
 
     let started = false;
     const timeout = setTimeout(() => {
       if (!started) {
         started = true;
-        // Assume it's running if it hasn't crashed
         running.push({ name: server.name, port, pid: child.pid });
-        resolve(true);
+        resolvePromise(true);
       }
     }, 5000);
 
@@ -124,7 +165,7 @@ async function launchServer(server, port) {
         started = true;
         clearTimeout(timeout);
         failed.push({ name: server.name, error: err.message });
-        resolve(false);
+        resolvePromise(false);
       }
     });
 
@@ -133,23 +174,21 @@ async function launchServer(server, port) {
         started = true;
         clearTimeout(timeout);
         if (code !== 0) {
-          const errMsg = stderrBuf.trim() ? `exit code ${code}: ${stderrBuf.trim().split('\n').slice(-3).join(' | ')}` : `exit code ${code}`;
+          const stderr = getStderr().trim();
+          const errMsg = stderr ? `exit code ${code}: ${stderr.split('\n').slice(-3).join(' | ')}` : `exit code ${code}`;
           failed.push({ name: server.name, error: errMsg });
-          resolve(false);
+          resolvePromise(false);
         }
-      } else {
-        // Server died after starting
-        console.error(`[DIED] ${server.name} (port ${port}) exited with code ${code}`);
-        if (stderrBuf.trim()) {
-          console.error(`[DIED] ${server.name} stderr:\n${stderrBuf.trim().split('\n').slice(-10).join('\n')}`);
+      } else if (!shuttingDown) {
+        respawnCount++;
+        const delay = RESPAWN_BASE_DELAY;
+        console.error(`[DIED] ${server.name} (port ${port}) exited with code ${code}, respawning in ${Math.round(delay / 1000)}s (${respawnCount}/${MAX_RESPAWN})`);
+        const stderr = getStderr().trim();
+        if (stderr) {
+          console.error(`  ${stderr.split('\n').slice(-3).join('\n  ')}`);
         }
+        setTimeout(respawn, delay);
       }
-    });
-
-    // Check stderr for quick failures
-    let stderrBuf = '';
-    child.stderr.on('data', (data) => {
-      stderrBuf += data.toString();
     });
   });
 }
@@ -226,6 +265,7 @@ process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 
 function shutdown() {
+  shuttingDown = true;
   console.log('\nShutting down all gateways...');
   process.exit(0);
 }
