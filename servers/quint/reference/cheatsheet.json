@@ -1,0 +1,133 @@
+{
+  "sets": {
+    "title": "Sets",
+    "description": "Quint set operations and constructors",
+    "entries": [
+      { "syntax": "Set(1, 2, 3)", "description": "Set literal" },
+      { "syntax": "1.to(10)", "description": "Integer range set (inclusive)" },
+      { "syntax": "s.contains(x)", "description": "Membership test" },
+      { "syntax": "s.subseteq(t)", "description": "Subset check: s is subset of t" },
+      { "syntax": "s.union(t)", "description": "Set union" },
+      { "syntax": "s.intersect(t)", "description": "Set intersection" },
+      { "syntax": "s.exclude(t)", "description": "Set difference: s \\ t" },
+      { "syntax": "s.filter(x => pred)", "description": "Filter elements by predicate" },
+      { "syntax": "s.map(x => expr)", "description": "Transform each element" },
+      { "syntax": "s.fold(init, (acc, x) => expr)", "description": "Left fold over set (nondeterministic order)" },
+      { "syntax": "s.forall(x => pred)", "description": "Universal quantifier: all elements satisfy pred" },
+      { "syntax": "s.exists(x => pred)", "description": "Existential quantifier: some element satisfies pred" },
+      { "syntax": "s.size()", "description": "Cardinality of the set" },
+      { "syntax": "s.flatten()", "description": "Flatten a set of sets" },
+      { "syntax": "s.powerset()", "description": "Power set" },
+      { "syntax": "s.chooseSome()", "description": "Pick an arbitrary element (nondeterministic)" },
+      { "syntax": "s.oneOf()", "description": "Pick one element (for simulation/nondet)" },
+      { "syntax": "tuples(s1, s2, ...)", "description": "Cartesian product as set of tuples" }
+    ]
+  },
+  "maps": {
+    "title": "Maps (Functions)",
+    "description": "Quint map operations — maps are total functions from keys to values",
+    "entries": [
+      { "syntax": "Map(k1 -> v1, k2 -> v2)", "description": "Map literal" },
+      { "syntax": "s.mapBy(k => expr)", "description": "Create map from set, mapping each key to a value" },
+      { "syntax": "m.get(k)", "description": "Get value for key k" },
+      { "syntax": "m.set(k, v)", "description": "Return new map with k mapped to v" },
+      { "syntax": "m.setBy(k, oldV => newV)", "description": "Update value at k using a function" },
+      { "syntax": "m.put(k, v)", "description": "Same as set — add or update key" },
+      { "syntax": "m.keys()", "description": "Set of keys in the map" },
+      { "syntax": "m.values()", "description": "Set of values (as a set — no duplicates)" },
+      { "syntax": "m.mapValues(v => expr)", "description": "Transform all values" },
+      { "syntax": "m.has(k)", "description": "Check if key exists" }
+    ]
+  },
+  "lists": {
+    "title": "Lists (Sequences)",
+    "description": "Quint list operations — ordered sequences",
+    "entries": [
+      { "syntax": "List(1, 2, 3)", "description": "List literal" },
+      { "syntax": "l.length()", "description": "Length of the list" },
+      { "syntax": "l.nth(i)", "description": "Element at index i (0-based)" },
+      { "syntax": "l.head()", "description": "First element" },
+      { "syntax": "l.tail()", "description": "All elements except the first" },
+      { "syntax": "l.append(x)", "description": "Add element to the end" },
+      { "syntax": "l.concat(l2)", "description": "Concatenate two lists" },
+      { "syntax": "l.indices()", "description": "Set of valid indices: 0.to(l.length() - 1)" },
+      { "syntax": "l.foldl(init, (acc, x) => expr)", "description": "Left fold over list (deterministic)" },
+      { "syntax": "l.select(x => pred)", "description": "Filter elements by predicate" },
+      { "syntax": "l.slice(from, to)", "description": "Sub-list from index 'from' to 'to' (exclusive)" },
+      { "syntax": "l.replaceAt(i, x)", "description": "New list with element at i replaced" }
+    ]
+  },
+  "actions": {
+    "title": "Actions & State",
+    "description": "Quint state variables and action composition",
+    "entries": [
+      { "syntax": "var x: T", "description": "Declare a state variable" },
+      { "syntax": "x' = expr", "description": "Assign next-state value to variable x" },
+      { "syntax": "all { A1, A2, ... }", "description": "Conjunction: all actions must succeed (AND)" },
+      { "syntax": "any { A1, A2, ... }", "description": "Disjunction: pick one that succeeds (OR / nondeterministic choice)" },
+      { "syntax": "if (cond) A1 else A2", "description": "Conditional action" },
+      { "syntax": "nondet x = s.oneOf(); A", "description": "Nondeterministic choice: pick x from set s, then do A" },
+      { "syntax": "action init = ...", "description": "Define an initialization action" },
+      { "syntax": "action step = ...", "description": "Define a step (transition) action" },
+      { "syntax": "val inv = ...", "description": "Define a state invariant" },
+      { "syntax": "require(cond)", "description": "Guard: action only applies when cond is true" },
+      { "syntax": "assert(cond)", "description": "Runtime assertion" }
+    ]
+  },
+  "temporal": {
+    "title": "Temporal Properties",
+    "description": "Temporal operators for specifying liveness and safety properties",
+    "entries": [
+      { "syntax": "always(P)", "description": "Safety: P holds in every reachable state (invariant)" },
+      { "syntax": "eventually(P)", "description": "Liveness: P holds at some point in every execution" },
+      { "syntax": "P.implies(Q)", "description": "Logical implication: if P then Q" },
+      { "syntax": "next(P)", "description": "P holds in the next state" },
+      { "syntax": "enabled(A)", "description": "Action A can be taken (its guard is satisfied)" },
+      { "syntax": "orKeep(A, vars)", "description": "A or stuttering (vars unchanged)" },
+      { "syntax": "mustChange(A, vars)", "description": "A must change at least one of vars" }
+    ]
+  },
+  "types": {
+    "title": "Type System",
+    "description": "Quint types and type annotations",
+    "entries": [
+      { "syntax": "int", "description": "Arbitrary-precision integer" },
+      { "syntax": "str", "description": "String" },
+      { "syntax": "bool", "description": "Boolean" },
+      { "syntax": "Set[T]", "description": "Set of T" },
+      { "syntax": "List[T]", "description": "Ordered list of T" },
+      { "syntax": "T -> U", "description": "Map (total function) from T to U" },
+      { "syntax": "(T1, T2, ...)", "description": "Tuple type" },
+      { "syntax": "{ field1: T1, field2: T2 }", "description": "Record type" },
+      { "syntax": "type Alias = T", "description": "Type alias" },
+      { "syntax": "| Variant1(T1) | Variant2(T2)", "description": "Sum type (tagged union / variant)" },
+      { "syntax": "const N: int", "description": "Module-level constant (parameterize specs)" },
+      { "syntax": "pure def f(x: T): U = ...", "description": "Pure function (no state access)" },
+      { "syntax": "def f(x: T): U = ...", "description": "Definition (may read state)" },
+      { "syntax": "action a(x: T): bool = ...", "description": "Action (may update state)" }
+    ]
+  },
+  "modules": {
+    "title": "Modules & Imports",
+    "description": "Quint module system",
+    "entries": [
+      { "syntax": "module M { ... }", "description": "Define a module" },
+      { "syntax": "import M.*", "description": "Import all definitions from M" },
+      { "syntax": "import M.f", "description": "Import specific definition f from M" },
+      { "syntax": "import M(N=3) as M3", "description": "Instantiate parameterized module" },
+      { "syntax": "export M.*", "description": "Re-export definitions from M" }
+    ]
+  },
+  "testing": {
+    "title": "Testing",
+    "description": "Quint test definitions for simulation-based testing",
+    "entries": [
+      { "syntax": "run myTest = { init.then(step).then(step).then(assert(inv)) }", "description": "Sequential test: run actions in order, check assertion" },
+      { "syntax": "a.then(b)", "description": "Sequential composition: run a, then b" },
+      { "syntax": "a.repeated(n)", "description": "Repeat action a up to n times" },
+      { "syntax": "a.expect(cond)", "description": "Run action a, then check cond holds" },
+      { "syntax": "a.fail()", "description": "Expect action a to fail (guard false)" },
+      { "syntax": "run initAndStep = init.then(step.repeated(5))", "description": "Common test pattern: init then multiple steps" }
+    ]
+  }
+}

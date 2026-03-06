@@ -1,0 +1,25 @@
+{
+  "name": "@dpdanpittman/mcp-server-quint",
+  "version": "1.0.0",
+  "description": "MCP server for the Quint formal specification language — typecheck, simulate, test, verify, and parse Quint specs",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "mcp-server-quint": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.25.67"
+  },
+  "keywords": [
+    "mcp",
+    "quint",
+    "formal-verification",
+    "model-checking",
+    "tla+"
+  ],
+  "license": "PolyForm-Noncommercial-1.0.0"
+}
