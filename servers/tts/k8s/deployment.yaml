@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coqui-tts
+  namespace: mcp
+  labels:
+    app: coqui-tts
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: coqui-tts
+  template:
+    metadata:
+      labels:
+        app: coqui-tts
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: zaphod
+      containers:
+        - name: coqui-tts
+          image: coqui-tts:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3240
+              protocol: TCP
+          env:
+            - name: TTS_DEVICE
+              value: "cpu"
+            - name: TTS_MODEL
+              value: "tts_models/multilingual/multi-dataset/xtts_v2"
+            - name: TTS_HOME
+              value: "/app/models"
+            - name: COQUI_TOS_AGREED
+              value: "1"
+          volumeMounts:
+            - name: model-cache
+              mountPath: /app/models
+            - name: voices
+              mountPath: /app/voices
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "2"
+            limits:
+              memory: "8Gi"
+              cpu: "8"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3240
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3240
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: model-cache
+          hostPath:
+            path: /opt/coqui-tts-models
+            type: DirectoryOrCreate
+        - name: voices
+          hostPath:
+            path: /opt/coqui-tts-voices
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coqui-tts
+  namespace: mcp
+spec:
+  type: NodePort
+  selector:
+    app: coqui-tts
+  ports:
+    - port: 3240
+      targetPort: 3240
+      nodePort: 31240
+      protocol: TCP

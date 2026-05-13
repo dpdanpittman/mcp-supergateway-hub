@@ -136,15 +136,10 @@ export function getServers() {
     { name: "pagemap", command: "npx", args: ["-y", "pagemap-mcp"] },
 
     // TIER 5: Communication & Collaboration
-    {
-      name: "slack",
-      command: "npx",
-      args: ["-y", "@modelcontextprotocol/server-slack"],
-      env: {
-        SLACK_BOT_TOKEN: e.SLACK_BOT_TOKEN,
-        SLACK_TEAM_ID: e.SLACK_TEAM_ID,
-      },
-    },
+    // Note: slack is NOT proxied through this gateway. It runs as its own
+    // k8s deployment (servers/slack/k8s/) using korotovsky/slack-mcp-server,
+    // which authenticates with browser session tokens (xoxc/xoxd) instead of
+    // a bot token. Endpoint: http://192.168.1.176:3232/mcp.
     {
       name: "discord",
       command: "npx",
@@ -260,6 +255,14 @@ export function getServers() {
 
     // TIER 11: AI Model Bridges
     {
+      name: "session-essence",
+      command: "node",
+      args: [
+        resolve(__dirname, "..", "servers", "session-essence", "index.js"),
+      ],
+      env: { OLLAMA_HOST: e.OLLAMA_HOST, OLLAMA_MODEL: e.OLLAMA_MODEL },
+    },
+    {
       name: "ollama-assistant",
       command: "node",
       args: [
@@ -357,6 +360,25 @@ export function getServers() {
       name: "quint",
       command: "node",
       args: [resolve(__dirname, "..", "servers", "quint", "index.js")],
+    },
+
+    // TIER 17: Content Pipeline (ARIA YouTube)
+    {
+      name: "tts",
+      command: "node",
+      args: [resolve(__dirname, "..", "servers", "tts", "index.js")],
+      env: {
+        TTS_BACKEND: e.TTS_BACKEND,
+        COQUI_URL: e.COQUI_URL,
+        ELEVENLABS_API_KEY: e.ELEVENLABS_API_KEY,
+      },
+    },
+    {
+      name: "video-assembler",
+      command: "node",
+      args: [
+        resolve(__dirname, "..", "servers", "video-assembler", "index.js"),
+      ],
     },
 
     // TIER 16: Meta / Infrastructure

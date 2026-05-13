@@ -1,0 +1,16 @@
+{
+  "name": "mcp-server-tts",
+  "version": "1.0.0",
+  "description": "MCP server for text-to-speech generation — supports Coqui XTTS and ElevenLabs backends",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "mcp-server-tts": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  }
+}

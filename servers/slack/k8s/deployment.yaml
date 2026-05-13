@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-mcp-server
+  namespace: mcp
+  labels:
+    app: slack-mcp-server
+    tier: comms
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: slack-mcp-server
+  template:
+    metadata:
+      labels:
+        app: slack-mcp-server
+        tier: comms
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        dedicated: mcp
+      containers:
+        - name: slack-mcp-server
+          image: ghcr.io/korotovsky/slack-mcp-server:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-t", "http"]
+          env:
+            - name: SLACK_MCP_HOST
+              value: "0.0.0.0"
+            - name: SLACK_MCP_PORT
+              value: "3232"
+            - name: SLACK_MCP_ADD_MESSAGE_TOOL
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: slack-mcp-tokens
+          ports:
+            - containerPort: 3232
+              hostPort: 3232
+              protocol: TCP
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
