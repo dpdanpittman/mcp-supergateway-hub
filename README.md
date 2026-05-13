@@ -134,24 +134,30 @@ Make sure the config uses `"type": "http"` — bare URL entries are silently ign
 
 ## Included Servers (62)
 
-| Tier | Category | Servers |
-|------|----------|---------|
-| 1 | Core Dev | filesystem, git, github, memory, sequential-thinking, fetch, time, docker |
-| 2 | Databases | postgres, sqlite, mongodb, redis |
-| 3 | Cloud & Infra | cloudflare, terraform, kubernetes, localstack |
-| 4 | Browser & Web | playwright, puppeteer, brave-search, pagemap |
-| 5 | Communication | slack, discord, notion |
-| 6 | Creative & Design | figma, blender, ableton, reaper, svgmaker, manim, davinci-resolve |
-| 7 | Smart Home | home-assistant |
-| 8 | Finance & Crypto | coingecko, alpaca, crypto-trading, crypto-portfolio, alphavantage, bankless-onchain |
-| 9 | Monitoring | sentry, axiom |
-| 10 | Data & APIs | anyquery, pipedream, apify, e2b, mindsdb |
-| 11 | AI Bridges | ollama-assistant, ollama-bridge, openai-bridge, gemini-bridge, openai-image, google-imagen |
-| 12 | Gaming | aseprite |
-| 13 | DevOps | atlassian, azure-devops, gitlab |
-| 14 | Misc | youtube-transcript, spotify, open-library, tmdb, personalization |
-| 15 | Formal Verification | [quint](https://github.com/dpdanpittman/mcp-server-quint) |
-| 16 | Meta | everything, forage |
+| Tier | Category            | Servers                                                                                    |
+| ---- | ------------------- | ------------------------------------------------------------------------------------------ |
+| 1    | Core Dev            | filesystem, git, github, memory, sequential-thinking, fetch, time, docker                  |
+| 2    | Databases           | postgres, sqlite, mongodb, redis                                                           |
+| 3    | Cloud & Infra       | cloudflare, terraform, kubernetes, localstack                                              |
+| 4    | Browser & Web       | playwright, puppeteer, brave-search, pagemap                                               |
+| 5    | Communication       | slack, discord, notion                                                                     |
+| 6    | Creative & Design   | figma, blender, ableton, reaper, svgmaker, manim, davinci-resolve                          |
+| 7    | Smart Home          | home-assistant                                                                             |
+| 8    | Finance & Crypto    | coingecko, alpaca, crypto-trading, crypto-portfolio, alphavantage, bankless-onchain        |
+| 9    | Monitoring          | sentry, axiom                                                                              |
+| 10   | Data & APIs         | anyquery, pipedream, apify, e2b, mindsdb                                                   |
+| 11   | AI Bridges          | ollama-assistant, ollama-bridge, openai-bridge, gemini-bridge, openai-image, google-imagen |
+| 12   | Gaming              | aseprite                                                                                   |
+| 13   | DevOps              | atlassian, azure-devops, gitlab                                                            |
+| 14   | Misc                | youtube-transcript, spotify, open-library, tmdb, personalization                           |
+| 15   | Formal Verification | [quint](https://github.com/dpdanpittman/mcp-server-quint)                                  |
+| 16   | Meta                | everything, forage                                                                         |
+
+## Recipes
+
+End-to-end worked examples that consume the gateway:
+
+- [Daily Slack digest via email](recipes/slack-daily-digest.md) — systemd timer + `claude -p` + Slack MCP + msmtp. The canonical "claude as cron" pattern.
 
 ## License
 
