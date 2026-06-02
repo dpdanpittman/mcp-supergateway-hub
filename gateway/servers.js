@@ -32,9 +32,11 @@ export function getServers() {
       env: { GITHUB_PERSONAL_ACCESS_TOKEN: e.GITHUB_TOKEN },
     },
     {
+      // Patched fork of @modelcontextprotocol/server-memory — tokenized + scored
+      // search_nodes (see servers/memory-mabus/). Same JSONL store/format as stock.
       name: "memory",
-      command: "npx",
-      args: ["-y", "@modelcontextprotocol/server-memory"],
+      command: "node",
+      args: [resolve(__dirname, "..", "servers", "memory-mabus", "index.js")],
     },
     {
       name: "sequential-thinking",
