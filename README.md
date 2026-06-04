@@ -1,6 +1,6 @@
 # MCP Supergateway Hub
 
-Run 62 MCP servers on a single machine, each exposed as a streamable HTTP endpoint via [supergateway](https://github.com/supercorp-ai/supergateway). Connect Claude Code (or any MCP client) to all of them over your network.
+Run 63 MCP servers on a single machine, each exposed as a streamable HTTP endpoint via [supergateway](https://github.com/supercorp-ai/supergateway). Connect Claude Code (or any MCP client) to all of them over your network.
 
 ## Why?
 
@@ -132,7 +132,7 @@ Make sure the config uses `"type": "http"` — bare URL entries are silently ign
 - Docker (for docker MCP server)
 - Quint CLI (`npm i -g @informalsystems/quint`) for formal verification server
 
-## Included Servers (62)
+## Included Servers (63)
 
 | Tier | Category            | Servers                                                                                    |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------ |
@@ -152,6 +152,7 @@ Make sure the config uses `"type": "http"` — bare URL entries are silently ign
 | 14   | Misc                | youtube-transcript, spotify, open-library, tmdb, personalization                           |
 | 15   | Formal Verification | [quint](https://github.com/dpdanpittman/mcp-server-quint)                                  |
 | 16   | Meta                | everything, forage                                                                         |
+| 18   | Documentation       | [context7](https://github.com/upstash/context7)                                            |
 
 ## Recipes
 

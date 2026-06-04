@@ -390,5 +390,16 @@ export function getServers() {
       args: ["-y", "@modelcontextprotocol/server-everything"],
     },
     { name: "forage", command: "npx", args: ["-y", "forage-mcp"] },
+
+    // TIER 18: Documentation (current, version-specific library docs)
+    {
+      // Context7 (Upstash) — resolve-library-id + query-docs against live
+      // upstream docs. Runs keyless; set CONTEXT7_API_KEY in mcp-env for
+      // higher rate limits.
+      name: "context7",
+      command: "npx",
+      args: ["-y", "@upstash/context7-mcp"],
+      env: { CONTEXT7_API_KEY: e.CONTEXT7_API_KEY },
+    },
   ];
 }
