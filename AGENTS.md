@@ -32,7 +32,7 @@ node index.js --exclude blender  # start all except these
 node index.js --generate         # write gateway/claude-settings.json (git-ignored)
 ```
 
-Custom servers: `cd servers/<name> && npm install && npm start`.
+Custom servers: `cd servers/<name> && npm install && npm start`. `servers/memory-mabus` has no `start` script; run `node index.js` there.
 
 There is no test suite, no linter and no type checker in this repo. The checks that exist:
 
@@ -49,7 +49,7 @@ Trap: `npm run generate-settings` in `gateway/package.json` points to a `generat
 The owner runs and deploys this. The repo shows two paths:
 
 - The gateway runs as a systemd service (`mcp-gateway.service`) on a homelab machine, reading `.env` at start.
-- A few servers (Slack, Coqui TTS) run as separate Kubernetes deployments in the `mcp` namespace on the homelab cluster, using manifests under `servers/*/k8s/`. Their tokens live in Kubernetes Secrets, not in this repo.
+- A few servers (Slack, Coqui TTS) run as separate Kubernetes deployments in the `mcp` namespace on the homelab cluster, using manifests under `servers/*/k8s/`. The Slack tokens live in a Kubernetes Secret, not in this repo.
 
 An agent does not deploy, restart the service, or apply manifests. A change to a running system is a reviewed script that the owner runs.
 
