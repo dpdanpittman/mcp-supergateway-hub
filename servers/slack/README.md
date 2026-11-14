@@ -5,8 +5,8 @@ instead of a bot token — no Slack app install / admin approval required.
 
 - Image: `ghcr.io/korotovsky/slack-mcp-server:latest`
 - Namespace: `mcp`
-- Port: `3232` on host `192.168.1.176` (hostNetwork)
-- Endpoint: `http://192.168.1.176:3232/mcp`
+- Port: `3232` on the node's address (hostNetwork)
+- Endpoint: `http://<node-ip>:3232/mcp`
 
 ## Tokens
 
@@ -16,7 +16,7 @@ Source-of-truth on the workstation: `~/.config/slack-mcp/.env` (chmod 600).
 To (re)create the Secret from the local `.env`:
 
 ```bash
-ssh claude@192.168.1.6 "sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf \
+ssh <user>@<control-plane> "sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf \
   -n mcp create secret generic slack-mcp-tokens \
   --from-env-file=/tmp/slack-mcp.env \
   --dry-run=client -o yaml | sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f -"

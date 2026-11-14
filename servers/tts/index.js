@@ -19,7 +19,7 @@ import { dirname } from "path";
 
 // Configuration
 const TTS_BACKEND = process.env.TTS_BACKEND || "coqui";
-const COQUI_URL = process.env.COQUI_URL || "http://192.168.6.56:3240";
+const COQUI_URL = process.env.COQUI_URL || "http://localhost:3240";
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY || "";
 const ELEVENLABS_URL = "https://api.elevenlabs.io/v1";
 const TTS_TIMEOUT = parseInt(process.env.TTS_TIMEOUT || "300000", 10); // 5 min

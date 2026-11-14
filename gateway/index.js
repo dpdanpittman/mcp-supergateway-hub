@@ -40,7 +40,7 @@ if (existsSync(ENV_PATH)) {
 
 const HOST = process.env.MCP_HOST || '0.0.0.0';
 const BASE_PORT = parseInt(process.env.MCP_BASE_PORT || '3170', 10);
-const PUBLIC_HOST = process.env.MCP_PUBLIC_HOST || '192.168.1.7';
+const PUBLIC_HOST = process.env.MCP_PUBLIC_HOST || 'localhost';
 
 // Parse CLI args
 const args = process.argv.slice(2);

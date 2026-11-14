@@ -1,7 +1,7 @@
 """
 Coqui XTTS v2 TTS Server
 Lightweight FastAPI wrapper around the TTS library.
-Runs on CPU by default (GPU consumed by Ollama on zaphod).
+Runs on CPU by default (the GPU is reserved for the local Ollama server).
 
 XTTS v2 is a voice-cloning model — it needs a reference WAV to define
 the speaker voice. If no speaker_wav is provided in the request, the

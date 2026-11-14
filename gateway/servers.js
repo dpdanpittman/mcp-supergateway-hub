@@ -141,7 +141,7 @@ export function getServers() {
     // Note: slack is NOT proxied through this gateway. It runs as its own
     // k8s deployment (servers/slack/k8s/) using korotovsky/slack-mcp-server,
     // which authenticates with browser session tokens (xoxc/xoxd) instead of
-    // a bot token. Endpoint: http://192.168.1.176:3232/mcp.
+    // a bot token. Endpoint: http://<node-ip>:3232/mcp.
     {
       name: "discord",
       command: "npx",
