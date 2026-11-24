@@ -2,6 +2,10 @@
 
 Run 63 MCP servers on a single machine, each exposed as a streamable HTTP endpoint via [supergateway](https://github.com/supercorp-ai/supergateway). Connect Claude Code (or any MCP client) to all of them over your network.
 
+![The launcher lists its servers, starts two of them on HTTP ports, and each answers a tools/list request](docs/demo.png)
+
+_A real run on a spare port range. Curl headers and the middle of the server list are left out._
+
 ## Why?
 
 MCP servers typically run as stdio processes — great for local use, but can't be shared across machines. This hub wraps each server in a supergateway instance that bridges stdio to HTTP, so you can run all your MCP servers on a dedicated box and connect from any dev machine.
